@@ -1,0 +1,96 @@
+
+/nwx 144 def
+/nwy 144 def
+
+/nex 288 def
+/ney 144 def
+
+/get-point {
+  /index exch def
+  /points exch def  
+  points index get
+  } def
+
+/make-square {
+  /start-x exch def
+  /start-y exch def
+  /points exch def
+  newpath
+  144 144 moveto
+  0 1 
+  points length
+  1 sub
+  {
+    /i exch def
+    /p1 {
+      points i get-point
+      } def
+    p1 0 get
+    p1 1 get
+    lineto
+    } for
+  stroke
+  } def
+
+[[144 0]
+ [144 144]
+ [0 144]
+ [0 0]] 144 144 make-square
+
+% argument: array of points
+% builds the corresponding polygon
+/make-polygon {
+  3 dict begin
+  /a exch def
+  /n a length def
+  n 1 gt
+  {
+    a 0 get 0 get
+    a 0 get 1 get
+    moveto
+    1 1 n 1 sub
+    {
+      /i exch def
+      a i get 0 get
+      a i get 1 get
+      lineto
+      } for
+    } if
+  end
+  } def
+
+newpath
+[[1 0]
+ [72 cos 72 sin]
+ [144 cos 144 sin]
+ [216 cos 216 sin]
+ [288 cos 288 sin]]
+make-polygon
+closepath
+stroke
+
+
+% At entrance the number of sides is on the stack
+% The effect is to build a regular polygon of N sides
+/make-regular-polygon {
+  4 dict begin
+  /N exch def
+  /A 360 N div def
+  1 0 moveto
+  N {
+    A cos A sin lineto
+    /A A 360 N div add def
+    } repeat
+  closepath
+  end
+  } def
+
+
+1 0 moveto
+1 1 5 {
+  /i exch def
+  i 72 mul cos i 72 mul sin lineto
+  } for
+closepath
+
+
